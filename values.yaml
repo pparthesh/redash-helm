@@ -1,0 +1,152 @@
+# override name
+nameOverride:
+
+# replication count for
+# web, scheduledWorker, adhocWorker and scheduled
+replicaCount: 1
+
+# redash docker image
+image:
+  repository:  redash/redash
+  tag: latest
+  pullPolicy: IfNotPresent
+
+# redash service
+service:
+  type: ClusterIP
+
+# redash web server
+web:
+  workersCount: 1
+  resources:
+    limits:
+     cpu: 500m
+     memory: 256Mi
+    requests:
+     cpu: 150m
+     memory: 128Mi
+
+# redash scheduled_queries
+scheduledWorker:
+  workersCount: 1
+  queues: scheduled_queries
+  resources:
+    limits:
+     cpu: 500m
+     memory: 256Mi
+    requests:
+     cpu: 150m
+     memory: 128Mi
+
+# redash queries
+adhocWorker:
+  workersCount: 1
+  queues: queries
+  resources:
+    limits:
+     cpu: 500m
+     memory: 256Mi
+    requests:
+     cpu: 150m
+     memory: 128Mi
+
+# redash celery
+scheduled:
+  workersCount: 1
+  queues: celery
+  resources:
+    limits:
+     cpu: 500m
+     memory: 256Mi
+    requests:
+     cpu: 150m
+     memory: 128Mi
+
+# mail server config
+mail:
+  server:
+  port: 25
+  useTls: false
+  username:
+  password:
+  defaultSender:
+
+# redash name
+redashName: Redash
+
+# assets path
+redashStaticAssetsPath: ../client/dist/
+
+# random token
+redashCookieSecret:
+
+redashEnforceHTTPs: false
+
+redashJobExpiryTime: 300
+
+redashFeatureShowPermissionsControl: false
+
+logLevel: DEBUG
+
+# extra environment variable
+# https://redash.io/help/open-source/admin-guide/env-vars-settings
+extraEnvironment: {}
+
+# google auth
+googleOAuth:
+  enabled: false
+  redashGoogleClientId:
+  redashGoogleClientSecret:
+  redashPasswordLoginEnabled: false
+
+# database
+# Notes: create the database before deployment
+# from `postgresql` or `externalPostgres` only one should be enabled.
+# `postgresql` use helm dependency for postgres db
+postgresql:
+  enabled: true
+  postgresqlUsername:
+  postgresqlPassword:
+  postgresqlDatabase:
+  persistence:
+    enabled: false
+
+# `externalPostgres` use external postgres db
+# RDS, static node, etc.
+externalPostgres:
+  enabled: false
+  postgresqlHost:
+  postgresqlPort:
+  postgresqlUsername:
+  postgresqlPassword:
+  postgresqlDatabase:
+
+# database table creation task(create_db)
+# true for create tables(init deployment) or false
+# https://github.com/getredash/redash/blob/master/bin/docker-entrypoint
+dbCreateTables: false
+
+# random token
+redis:
+  password:
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# ingress
+ingress:
+  enabled: false
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  labels: {}
+  path: /
+  hosts: []
+  #  - chart-example.local
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local

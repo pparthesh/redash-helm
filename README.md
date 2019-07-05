@@ -1,6 +1,6 @@
-# REdash Helm Chart
+# Redash Helm Chart
 
-* Installs the [Redash](https://redash.io/)
+* Install the [redash](https://redash.io/)
 
 ## TL;DR;
 
@@ -23,8 +23,3 @@ To uninstall/delete the my-release deployment:
 ```console
 $ helm delete my-release
 ```
-
-### Notes
-- create the database before deployment.
-- set `dbCreateTables`:`true` if database tables are not exists or set `false`.
-- make sure `postgresql` and `externalPostgres` both are not enabled. only one should be enabled.
