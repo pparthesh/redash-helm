@@ -1,6 +1,6 @@
 # Redash Helm Chart
 
-* Install the [redash](https://redash.io/)
+* Install the [redash](https://redash.io/) on kubernetes
 
 ## TL;DR;
 
