@@ -1,0 +1,117 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ template "redash.fullname" . }}-adhoc-worker
+  labels:
+    app: {{ template "redash.name" . }}
+    chart: {{ template "redash.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "redash.name" . }}
+      release: {{ .Release.Name }}
+      role: adhoc-worker
+  template:
+    metadata:
+      labels:
+        app: {{ template "redash.name" . }}
+        release: {{ .Release.Name }}
+        role: adhoc-worker
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: {{ .Chart.Name }}-adhoc-worker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - /app/bin/docker-entrypoint worker; tail -f /dev/null
+          readinessProbe:
+            exec:
+             command:
+             - pgrep
+             - -f
+             - worker
+            initialDelaySeconds: 30
+            timeoutSeconds: 5
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          livenessProbe:
+            exec:
+             command:
+             - pgrep
+             - -f
+             - worker
+            initialDelaySeconds: 30
+            timeoutSeconds: 1
+            periodSeconds: 10
+            successThreshold: 1
+            failureThreshold: 3
+          env:
+          {{- range $key, $value := .Values.extraEnvironment }}
+          - name: {{ $key | upper }}
+            value: {{ tpl $value $ | quote }}
+          {{- end }}
+          - name: REDASH_NAME
+            value: {{ .Values.redashName | quote }}
+          - name: REDASH_ENFORCE_HTTPS
+            value: {{ .Values.redashEnforceHTTPs | quote }}
+          - name: REDASH_STATIC_ASSETS_PATH
+            value: {{ .Values.redashStaticAssetsPath | quote }}
+          - name: REDASH_COOKIE_SECRET
+            value: {{ .Values.redashCookieSecret | quote }}
+          - name: REDASH_CORS_ACCESS_CONTROL_ALLOW_ORIGIN
+            value: {{ template "redash.host" . }}
+          - name: REDASH_DATABASE_URL
+            value: {{ template "redash.postgresConnectionURL" . }}
+          - name: REDASH_HOST
+            value: {{ template "redash.host" . }}
+          - name: REDASH_REDIS_URL
+            value: {{ template "redash.redisURL" . }}
+          - name: WORKERS_COUNT
+            value: {{ .Values.adhocWorker.workersCount | quote }}
+          - name: REDASH_MAIL_SERVER
+            value: {{ .Values.mail.server | quote }}
+          - name: REDASH_MAIL_PORT
+            value: {{ .Values.mail.port | quote }}
+          - name: REDASH_MAIL_USERNAME
+            value: {{ .Values.mail.username | quote }}
+          - name: REDASH_MAIL_PASSWORD
+            value: {{ .Values.mail.password | quote }}
+          - name: REDASH_MAIL_DEFAULT_SENDER
+            value: {{ .Values.mail.defaultSender | quote }}
+          - name: REDASH_LOG_LEVEL
+            value: {{ .Values.logLevel | quote }}
+          - name: QUEUES
+            value: {{ .Values.adhocWorker.queues | quote }}
+          - name: REDASH_JOB_EXPIRY_TIME
+            value: {{ .Values.redashJobExpiryTime | quote }}
+          - name: REDASH_FEATURE_SHOW_PERMISSIONS_CONTROL
+            value: {{ .Values.redashFeatureShowPermissionsControl | quote }}
+          {{- if .Values.googleOAuth.enabled }}
+          - name: REDASH_GOOGLE_CLIENT_ID
+            value: {{ .Values.googleOAuth.redashGoogleClientId | quote }}
+          - name: REDASH_GOOGLE_CLIENT_SECRET
+            value: {{ .Values.googleOAuth.redashGoogleClientSecret | quote }}
+          - name: REDASH_PASSWORD_LOGIN_ENABLED
+            value: {{ .Values.googleOAuth.redashPasswordLoginEnabled | quote }}
+          {{- end }}
+          resources:
+{{ toYaml .Values.adhocWorker.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
