@@ -86,6 +86,8 @@ redashJobExpiryTime: 300
 
 redashFeatureShowPermissionsControl: false
 
+redashAdhocQueryTimeLimit: 300
+
 logLevel: DEBUG
 
 # extra environment variable

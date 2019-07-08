@@ -53,6 +53,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `redashCookieSecret`                      | Redash cookie secret                   | `secret token` |
 | `redashEnforceHTTPs`                      | Enforce HTTPs                          | `false` |
 | `redashJobExpiryTime`                     | Job expiry time                        | `300` |
+| `redashAdhocQueryTimeLimit`               | Ad-hoc query time limit                       | `300` |
 | `redashFeatureShowPermissionsControl`     | Redash permissions control             | `false` |
 | `logLevel`                                | Redash loglevel                        | `DEBUG` |
 | `extraEnvironment`                        | Extra environment variable             | `{}` |
@@ -82,3 +83,12 @@ The command removes all the Kubernetes components associated with the chart and 
 | `externalPostgres.postgresqlUsername`     | Postgres username                      | `` |
 | `externalPostgres.postgresqlPassword`     | Postgres password                      | `` |
 | `externalPostgres.postgresqlDatabase`     | Postgres database                      | `` |
+
+
+
+
+
+
+
+          - name: REDASH_ADHOC_QUERY_TIME_LIMIT
+            value: {{ .Values. | quote }}

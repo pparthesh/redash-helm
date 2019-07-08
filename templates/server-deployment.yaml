@@ -70,6 +70,8 @@ spec:
             value: {{ .Values.redashJobExpiryTime | quote }}
           - name: REDASH_FEATURE_SHOW_PERMISSIONS_CONTROL
             value: {{ .Values.redashFeatureShowPermissionsControl | quote }}
+          - name: REDASH_ADHOC_QUERY_TIME_LIMIT
+            value: {{ .Values.redashAdhocQueryTimeLimit | quote }}
           {{- if .Values.googleOAuth.enabled }}
           - name: REDASH_GOOGLE_CLIENT_ID
             value: {{ .Values.googleOAuth.redashGoogleClientId | quote }}
@@ -153,6 +155,8 @@ spec:
             value: {{ .Values.redashJobExpiryTime | quote }}
           - name: REDASH_FEATURE_SHOW_PERMISSIONS_CONTROL
             value: {{ .Values.redashFeatureShowPermissionsControl | quote }}
+          - name: REDASH_ADHOC_QUERY_TIME_LIMIT
+            value: {{ .Values.redashAdhocQueryTimeLimit | quote }}
           {{- if .Values.googleOAuth.enabled }}
           - name: REDASH_GOOGLE_CLIENT_ID
             value: {{ .Values.googleOAuth.redashGoogleClientId | quote }}
