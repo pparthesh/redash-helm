@@ -86,9 +86,11 @@ redashJobExpiryTime: 300
 
 redashFeatureShowPermissionsControl: false
 
+redashAdhocQueryTimeLimit: 300
+
 logLevel: DEBUG
 
-# extra environment variable
+# extra environment variabl
 # https://redash.io/help/open-source/admin-guide/env-vars-settings
 extraEnvironment: {}
 
