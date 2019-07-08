@@ -90,7 +90,7 @@ redashAdhocQueryTimeLimit: 300
 
 logLevel: DEBUG
 
-# extra environment variabl
+# extra environment variable
 # https://redash.io/help/open-source/admin-guide/env-vars-settings
 extraEnvironment: {}
 
