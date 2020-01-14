@@ -128,9 +128,21 @@ externalPostgres:
 # https://github.com/getredash/redash/blob/master/bin/docker-entrypoint
 dbCreateTables: false
 
-# random token
+# Redis host
+# Notes: make redis available before deployment
 redis:
-  password:
+  enabled: true
+  RedisHost:
+  RedisPort: 6379
+  RedisPassword:
+
+# `externalRedis` use external redis host
+# Elasticache, etc.
+externalRedis:
+  enabled: false
+  RedisHost:
+  RedisPort:
+  RedisPassword:
 
 nodeSelector: {}
 

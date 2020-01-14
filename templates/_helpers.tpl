@@ -44,8 +44,13 @@ redash host
 redash redis
 */}}
 {{- define "redash.redisURL" -}}
-{{- $name := (include "redash.fullname" .) -}}
-{{- printf "redis://:%s@%s-redis-master:6379/0" .Values.redis.password $name | quote -}}
+{{- if .Values.externalRedis.enabled -}}
+{{- $redisport := .Values.externalRedis.RedisPort | toString -}}
+{{- printf "redis://%s@%s:%s/0" .Values.externalRedis.RedisPassword .Values.externalRedis.RedisHost $redisport | quote -}}
+{{- else -}}
+{{- $redisport := .Values.redis.RedisPort | toString -}}
+{{- printf "redis://%s@%s-redis-master:%s/0" .Values.redis.RedisPassword .Values.redis.RedisHost $redisport | quote -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
