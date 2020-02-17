@@ -61,7 +61,14 @@ The command removes all the Kubernetes components associated with the chart and 
 | `googleOAuth.redashGoogleClientId`        | Google client ID                       | `ClientId` |
 | `googleOAuth.redashGoogleClientSecret`    | Google client secret                   | `ClientSecret` |
 | `googleOAuth.redashPasswordLoginEnabled`  | Redash password login enabled          | `false` |
-| `redis.password`                          | Redis password                         | `` |
+| `redis.enabled`                           | Redis instance                         | `true` |
+| `redis.RedisPassword`                     | Redis password                         | `` |
+| `redis.RedisHost`                         | Redis host                             | `` |
+| `redis.RedisPort`                         | Redis port                             | `` |
+| `externalRedis.enabled`                   | External redis instance                | `false` |
+| `externalRedis.RedisPassword`             | External redis password                | `` |
+| `externalRedis.RedisHost`                 | External redis host                    | `` |
+| `externalRedis.RedisPort`                 | External redis port                    | `` |
 | `dbCreateTables`                          | If true, Create database table         | `false` |
 | `ingress.enabled`                         | If true, Ingress will be created       | `false` |
 | `ingress.annotations`                     | alertmanager Ingress annotations       | `{}` |
