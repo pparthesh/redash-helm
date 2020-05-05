@@ -65,7 +65,6 @@ The command removes all the Kubernetes components associated with the chart and 
 | `googleOAuth.redashPasswordLoginEnabled`  | Redash password login enabled          | `false` |
 | `redis.enabled`                           | Redis instance                         | `true` |
 | `redis.usePassword`                     | Redis password                         | `false` |
-
 | `externalRedis.enabled`                   | External redis instance                | `false` |
 | `externalRedis.RedisPassword`             | External redis password                | `` |
 | `externalRedis.RedisHost`                 | External redis host                    | `` |
@@ -92,3 +91,8 @@ The command removes all the Kubernetes components associated with the chart and 
 | `externalPostgres.postgresqlUsername`     | Postgres username                      | `` |
 | `externalPostgres.postgresqlPassword`     | Postgres password                      | `` |
 | `externalPostgres.postgresqlDatabase`     | Postgres database                      | `` |
+
+## Upgrade
+
+- change redash version
+- set `upgradeDB: true`
