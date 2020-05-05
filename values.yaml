@@ -1,14 +1,13 @@
 # override name
 nameOverride:
 
-# replication count for
-# web, scheduledWorker, adhocWorker and scheduled
+# replication count for web server, scheduledWorker, adhocWorker and scheduler
 replicaCount: 1
 
 # redash docker image
 image:
   repository:  redash/redash
-  tag: latest
+  tag: 6.0.0.b8537
   pullPolicy: IfNotPresent
 
 # redash service
@@ -17,50 +16,50 @@ service:
 
 # redash web server
 web:
-  workersCount: 1
-  resources:
-    limits:
-     cpu: 500m
-     memory: 256Mi
-    requests:
-     cpu: 150m
-     memory: 128Mi
+  workersCount: 4
+  # resources:
+  #   limits:
+  #    cpu: 500m
+  #    memory: 256Mi
+  #   requests:
+  #    cpu: 150m
+  #    memory: 128Mi
 
-# redash scheduled_queries
+# redash scheduled worker
 scheduledWorker:
   workersCount: 1
-  queues: scheduled_queries
-  resources:
-    limits:
-     cpu: 500m
-     memory: 256Mi
-    requests:
-     cpu: 150m
-     memory: 128Mi
+  queues: "scheduled_queries,schemas"
+  # resources:
+  #   limits:
+  #    cpu: 500m
+  #    memory: 256Mi
+  #   requests:
+  #    cpu: 150m
+  #    memory: 128Mi
 
-# redash queries
+# redash adhoc worker
 adhocWorker:
-  workersCount: 1
-  queues: queries
-  resources:
-    limits:
-     cpu: 500m
-     memory: 256Mi
-    requests:
-     cpu: 150m
-     memory: 128Mi
+  workersCount: 2
+  queues: "queries"
+  # resources:
+  #   limits:
+  #    cpu: 500m
+  #    memory: 256Mi
+  #   requests:
+  #    cpu: 150m
+  #    memory: 128Mi
 
-# redash celery
-scheduled:
+# redash scheduler
+scheduler:
   workersCount: 1
-  queues: celery
-  resources:
-    limits:
-     cpu: 500m
-     memory: 256Mi
-    requests:
-     cpu: 150m
-     memory: 128Mi
+  queues: "celery"
+  # resources:
+  #   limits:
+  #    cpu: 500m
+  #    memory: 256Mi
+  #   requests:
+  #    cpu: 150m
+  #    memory: 128Mi
 
 # mail server config
 mail:
@@ -78,7 +77,7 @@ redashName: Redash
 redashStaticAssetsPath: ../client/dist/
 
 # random token
-redashCookieSecret:
+redashCookieSecret: "EozNqTAI3VAHj7y4O2TffPXy9VEI7P7"
 
 redashEnforceHTTPs: false
 
@@ -99,7 +98,7 @@ googleOAuth:
   enabled: false
   redashGoogleClientId:
   redashGoogleClientSecret:
-  redashPasswordLoginEnabled: false
+  redashPasswordLoginEnabled: true
 
 # database
 # Notes: create the database before deployment
@@ -107,9 +106,9 @@ googleOAuth:
 # `postgresql` use helm dependency for postgres db
 postgresql:
   enabled: true
-  postgresqlUsername:
-  postgresqlPassword:
-  postgresqlDatabase:
+  postgresqlUsername: postgres
+  postgresqlPassword: postgres
+  postgresqlDatabase: redash-postgres
   persistence:
     enabled: false
 
@@ -126,15 +125,20 @@ externalPostgres:
 # database table creation task(create_db)
 # true for create tables(init deployment) or false
 # https://github.com/getredash/redash/blob/master/bin/docker-entrypoint
-dbCreateTables: false
+createDB: true
+
+# migrate database script when upgrade redash version
+# fasle for first deployment
+# https://redash.io/help/open-source/admin-guide/how-to-upgrade
+# python manage.py db upgrade
+upgradeDB: false
 
 # Redis host
 # Notes: make redis available before deployment
+# not for production
 redis:
   enabled: true
-  RedisHost:
-  RedisPort: 6379
-  RedisPassword:
+  usePassword: false
 
 # `externalRedis` use external redis host
 # Elasticache, etc.

@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "redash.fullname" . }}-scheduled-worker
+  name: {{ template "redash.fullname" . }}-scheduler
   labels:
     app: {{ template "redash.name" . }}
     chart: {{ template "redash.chart" . }}
@@ -12,43 +12,41 @@ spec:
   selector:
     matchLabels:
       app: {{ template "redash.name" . }}
-      role: scheduled-worker
+      role: scheduler
       release: {{ .Release.Name }}
   template:
     metadata:
       labels:
         app: {{ template "redash.name" . }}
-        role: scheduled-worker
+        role: scheduler
         release: {{ .Release.Name }}
     spec:
       restartPolicy: Always
       containers:
-        - name: {{ .Chart.Name }}-scheduled-worker
+        - name: {{ .Chart.Name }}-scheduler
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - /bin/sh
             - -c
-            - /app/bin/docker-entrypoint worker; tail -f /dev/null
+            - /app/bin/docker-entrypoint worker;
           readinessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - worker
-            initialDelaySeconds: 15
-            timeoutSeconds: 5
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           livenessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - worker
-            initialDelaySeconds: 15
-            timeoutSeconds: 1
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
@@ -74,7 +72,7 @@ spec:
           - name: REDASH_REDIS_URL
             value: {{ template "redash.redisURL" . }}
           - name: WORKERS_COUNT
-            value: {{ .Values.scheduledWorker.workersCount | quote }}
+            value: {{ .Values.scheduler.workersCount | quote }}
           - name: REDASH_MAIL_SERVER
             value: {{ .Values.mail.server | quote }}
           - name: REDASH_MAIL_PORT
@@ -88,7 +86,7 @@ spec:
           - name: REDASH_LOG_LEVEL
             value: {{ .Values.logLevel | quote }}
           - name: QUEUES
-            value: {{ .Values.scheduledWorker.queues | quote }}
+            value: {{ .Values.scheduler.queues | quote }}
           - name: REDASH_JOB_EXPIRY_TIME
             value: {{ .Values.redashJobExpiryTime | quote }}
           - name: REDASH_FEATURE_SHOW_PERMISSIONS_CONTROL
@@ -104,7 +102,7 @@ spec:
             value: {{ .Values.googleOAuth.redashPasswordLoginEnabled | quote }}
           {{- end }}
           resources:
-{{ toYaml .Values.scheduledWorker.resources | indent 12 }}
+{{ toYaml .Values.scheduler.resources | indent 12 }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml . | indent 8 }}

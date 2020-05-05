@@ -29,26 +29,24 @@ spec:
           command:
             - /bin/sh
             - -c
-            - /app/bin/docker-entrypoint worker; tail -f /dev/null
+            - /app/bin/docker-entrypoint worker;
           readinessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - worker
-            initialDelaySeconds: 30
-            timeoutSeconds: 5
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           livenessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - worker
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3

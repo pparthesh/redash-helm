@@ -22,8 +22,8 @@ spec:
         release: {{ .Release.Name }}
     spec:
       restartPolicy: Always
-{{- if .Values.dbCreateTables }}
       initContainers:
+      {{- if .Values.createDB }}
         - name: {{ .Chart.Name }}-create-db
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -80,7 +80,65 @@ spec:
           - name: REDASH_PASSWORD_LOGIN_ENABLED
             value: {{ .Values.googleOAuth.redashPasswordLoginEnabled | quote }}
           {{- end }}
-{{- end }}
+        {{- end }}
+        {{- if .Values.upgradeDB }}
+        - name: {{ .Chart.Name }}-upgrade-db
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - /app/bin/docker-entrypoint manage db upgrade;
+          env:
+          {{- range $key, $value := .Values.extraEnvironment }}
+          - name: {{ $key | upper }}
+            value: {{ tpl $value $ | quote }}
+          {{- end }}
+          - name: REDASH_NAME
+            value: {{ .Values.redashName | quote }}
+          - name: REDASH_LOG_LEVEL
+            value: {{ .Values.logLevel | quote }}
+          - name: REDASH_DATABASE_URL
+            value: {{ template "redash.postgresConnectionURL" . }}
+          - name: REDASH_HOST
+            value: {{ template "redash.host" . }}
+          - name: REDASH_REDIS_URL
+            value: {{ template "redash.redisURL" . }}
+          - name: REDASH_MAIL_SERVER
+            value: {{ .Values.mail.server | quote }}
+          - name: REDASH_MAIL_PORT
+            value: {{ .Values.mail.port | quote }}
+          - name: REDASH_MAIL_USERNAME
+            value: {{ .Values.mail.username | quote }}
+          - name: REDASH_MAIL_PASSWORD
+            value: {{ .Values.mail.password | quote }}
+          - name: REDASH_MAIL_DEFAULT_SENDER
+            value: {{ .Values.mail.defaultSender | quote }}
+          - name: REDASH_STATIC_ASSETS_PATH
+            value: {{ .Values.redashStaticAssetsPath | quote }}
+          - name: REDASH_COOKIE_SECRET
+            value: {{ .Values.redashCookieSecret | quote }}
+          - name: REDASH_CORS_ACCESS_CONTROL_ALLOW_ORIGIN
+            value: {{ template "redash.host" . }}
+          - name: REDASH_ENFORCE_HTTPS
+            value: {{ .Values.redashEnforceHTTPs | quote }}
+          - name: REDASH_WEB_WORKERS
+            value: {{ .Values.web.workersCount | quote }}
+          - name: REDASH_JOB_EXPIRY_TIME
+            value: {{ .Values.redashJobExpiryTime | quote }}
+          - name: REDASH_FEATURE_SHOW_PERMISSIONS_CONTROL
+            value: {{ .Values.redashFeatureShowPermissionsControl | quote }}
+          - name: REDASH_ADHOC_QUERY_TIME_LIMIT
+            value: {{ .Values.redashAdhocQueryTimeLimit | quote }}
+          {{- if .Values.googleOAuth.enabled }}
+          - name: REDASH_GOOGLE_CLIENT_ID
+            value: {{ .Values.googleOAuth.redashGoogleClientId | quote }}
+          - name: REDASH_GOOGLE_CLIENT_SECRET
+            value: {{ .Values.googleOAuth.redashGoogleClientSecret | quote }}
+          - name: REDASH_PASSWORD_LOGIN_ENABLED
+            value: {{ .Values.googleOAuth.redashPasswordLoginEnabled | quote }}
+          {{- end }}
+        {{- end }}
       containers:
         - name: {{ .Chart.Name }}-server
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -88,31 +146,28 @@ spec:
           command:
             - /bin/sh
             - -c
-            - /app/bin/docker-entrypoint server; tail -f /dev/null
+            - /app/bin/docker-entrypoint server;
           ports:
             - name: http
               containerPort: 5000
-              port: 5000
               protocol: TCP
           readinessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - gunicorn
-            initialDelaySeconds: 30
-            timeoutSeconds: 5
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3
           livenessProbe:
             exec:
              command:
-             - pgrep
-             - -f
-             - gunicorn
-            initialDelaySeconds: 30
-            timeoutSeconds: 1
+             - /bin/pidof
+             - python
+            initialDelaySeconds: 60
+            timeoutSeconds: 2
             periodSeconds: 10
             successThreshold: 1
             failureThreshold: 3

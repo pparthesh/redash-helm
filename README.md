@@ -8,7 +8,7 @@
 $ helm install stable/redash-helm
 ```
 
-## Installing the Chart
+## Install
 
 To install the chart with the release name `my-release`:
 
@@ -16,7 +16,9 @@ To install the chart with the release name `my-release`:
 $ helm install --name my-release stable/redash-helm
 ```
 
-## Uninstalling the Chart
+Note: for fresh install `createDB: true` and `upgradeDB: false`
+
+## Uninstall
 
 To uninstall/delete the my-release deployment:
 
@@ -62,14 +64,13 @@ The command removes all the Kubernetes components associated with the chart and 
 | `googleOAuth.redashGoogleClientSecret`    | Google client secret                   | `ClientSecret` |
 | `googleOAuth.redashPasswordLoginEnabled`  | Redash password login enabled          | `false` |
 | `redis.enabled`                           | Redis instance                         | `true` |
-| `redis.RedisPassword`                     | Redis password                         | `` |
-| `redis.RedisHost`                         | Redis host                             | `` |
-| `redis.RedisPort`                         | Redis port                             | `` |
+| `redis.usePassword`                     | Redis password                         | `false` |
 | `externalRedis.enabled`                   | External redis instance                | `false` |
 | `externalRedis.RedisPassword`             | External redis password                | `` |
 | `externalRedis.RedisHost`                 | External redis host                    | `` |
 | `externalRedis.RedisPort`                 | External redis port                    | `` |
-| `dbCreateTables`                          | If true, Create database table         | `false` |
+| `createDB`                          | If true, Create database table         | `true` |
+| `upgradeDB`                          | If true, Upgrade database schema         | `false` |
 | `ingress.enabled`                         | If true, Ingress will be created       | `false` |
 | `ingress.annotations`                     | alertmanager Ingress annotations       | `{}` |
 | `ingress.labels`                          | Ingress additional labels              | `{}` |
@@ -91,11 +92,7 @@ The command removes all the Kubernetes components associated with the chart and 
 | `externalPostgres.postgresqlPassword`     | Postgres password                      | `` |
 | `externalPostgres.postgresqlDatabase`     | Postgres database                      | `` |
 
+## Upgrade
 
-
-
-
-
-
-          - name: REDASH_ADHOC_QUERY_TIME_LIMIT
-            value: {{ .Values. | quote }}
+- change redash version
+- set `upgradeDB: true`

@@ -48,8 +48,7 @@ redash redis
 {{- $redisport := .Values.externalRedis.RedisPort | toString -}}
 {{- printf "redis://%s@%s:%s/0" .Values.externalRedis.RedisPassword .Values.externalRedis.RedisHost $redisport | quote -}}
 {{- else -}}
-{{- $redisport := .Values.redis.RedisPort | toString -}}
-{{- printf "redis://%s@%s-redis-master:%s/0" .Values.redis.RedisPassword .Values.redis.RedisHost $redisport | quote -}}
+{{- printf "redis://%s-redis-master:6379/0" .Release.Name | quote -}}
 {{- end -}}
 {{- end -}}
 
@@ -66,9 +65,8 @@ redash postgres
 {{- $host := (include "redash.fullname" .) -}}
 {{- printf "postgresql://%s:%s@%s-postgresql:5432/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword $host .Values.postgresql.postgresqlDatabase | quote -}}
 {{- else -}}
-{{- $hostnamedefault := printf "%s-postgresql" .Chart.Name | trunc 63 | trimSuffix "-" -}}
-{{- $host := $hostnamedefault | trunc 63 | trimSuffix "-" -}}
-{{- printf "postgresql://%s:%s@%s:5432/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword $host .Values.postgresql.postgresqlDatabase | quote -}}
+{{- $hostnamedefault := printf "%s-postgresql" .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- printf "postgresql://%s:%s@%s:5432/%s" .Values.postgresql.postgresqlUsername .Values.postgresql.postgresqlPassword $hostnamedefault .Values.postgresql.postgresqlDatabase | quote -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}
