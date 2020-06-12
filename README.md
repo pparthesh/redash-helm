@@ -47,9 +47,12 @@ The command removes all the Kubernetes components associated with the chart and 
 | `mail.server`                             | Mail server url                        | `` |
 | `mail.port`                               | Mail server port                       | `` |
 | `mail.useTls`                             | Mail server TLS                        | `` |
+| `mail.useSSL`                             | Mail server SSL                        | `` |
 | `mail.username`                           | Mail server username                   | `` |
 | `mail.password`                           | Mail server password                   | `` |
 | `mail.defaultSender`                      | Default mail sender                    | `` |
+| `mail.maxEmails`                          | Default maxEmails                      | `` |
+| `mail.asciiAttachments`                   | Default asciiAttachments               | `false` |
 | `redashName`                              | Redash name                            | `Redash` |
 | `redashStaticAssetsPath`                  | Redash assets path                     | `../client/dist/` |
 | `redashCookieSecret`                      | Redash cookie secret                   | `secret token` |

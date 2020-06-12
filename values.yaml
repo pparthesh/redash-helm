@@ -71,7 +71,7 @@ mail:
   password:
   defaultSender:
   maxEmails:
-  asciiAttachments:
+  asciiAttachments: false
 
 # redash name
 redashName: Redash
