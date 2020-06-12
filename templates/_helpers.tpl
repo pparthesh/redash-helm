@@ -46,7 +46,8 @@ redash redis
 {{- define "redash.redisURL" -}}
 {{- if .Values.externalRedis.enabled -}}
 {{- $redisport := .Values.externalRedis.RedisPort | toString -}}
-{{- printf "redis://%s@%s:%s/0" .Values.externalRedis.RedisPassword .Values.externalRedis.RedisHost $redisport | quote -}}
+{{- $redisdb := .Values.externalRedis.RedisDb | toString -}}
+{{- printf "redis://%s@%s:%s/%s" .Values.externalRedis.RedisPassword .Values.externalRedis.RedisHost $redisport $redisdb | quote -}}
 {{- else -}}
 {{- printf "redis://%s-redis-master:6379/0" .Release.Name | quote -}}
 {{- end -}}

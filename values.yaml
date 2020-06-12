@@ -147,6 +147,7 @@ externalRedis:
   RedisHost:
   RedisPort:
   RedisPassword:
+  RedisDb:
 
 nodeSelector: {}
 
