@@ -66,9 +66,12 @@ mail:
   server:
   port: 25
   useTls: false
+  useSSL: false
   username:
   password:
   defaultSender:
+  maxEmails:
+  asciiAttachments:
 
 # redash name
 redashName: Redash
