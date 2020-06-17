@@ -15,10 +15,10 @@ maintainers:
 
 dependencies:
   - name: redis
-    version: 3.8.1
-    repository: https://kubernetes-charts.storage.googleapis.com/
+    version: 10.7.1
+    repository: https://charts.bitnami.com/bitnami
     condition: redis.enabled
   - name: postgresql
-    version: 2.6.5
-    repository: https://kubernetes-charts.storage.googleapis.com/
+    version: 8.10.5
+    repository: https://charts.bitnami.com/bitnami
     condition: postgresql.enabled
