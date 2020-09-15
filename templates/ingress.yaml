@@ -1,7 +1,7 @@
 {{- if .Values.ingress.enabled -}}
 {{- $fullName := include "redash.fullname" . -}}
 {{- $ingressPath := .Values.ingress.path -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -30,9 +30,12 @@ spec:
     - host: {{ . }}
       http:
         paths:
-          - path: {{ $ingressPath }}
-            backend:
-              serviceName: {{ $fullName }}-server
-              servicePort: 5000
+        - path: {{ $ingressPath }}
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: {{ $fullName }}-server
+              port:
+                number: 5000
   {{- end }}
 {{- end }}
