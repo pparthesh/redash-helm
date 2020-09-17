@@ -66,9 +66,12 @@ mail:
   server:
   port: 25
   useTls: false
+  useSSL: false
   username:
   password:
   defaultSender:
+  maxEmails:
+  asciiAttachments: false
 
 # redash name
 redashName: Redash
@@ -147,6 +150,7 @@ externalRedis:
   RedisHost:
   RedisPort:
   RedisPassword:
+  RedisDb:
 
 nodeSelector: {}
 

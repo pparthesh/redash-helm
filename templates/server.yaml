@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "redash.fullname" . }}-server
@@ -56,6 +56,14 @@ spec:
             value: {{ .Values.mail.password | quote }}
           - name: REDASH_MAIL_DEFAULT_SENDER
             value: {{ .Values.mail.defaultSender | quote }}
+          - name: REDASH_MAIL_USE_TLS
+            value: {{ .Values.mail.useTls | quote }}
+          - name: REDASH_MAIL_USE_SSL
+            value: {{ .Values.mail.useSSL | quote }}
+          - name: REDASH_MAIL_MAX_EMAILS
+            value: {{ .Values.mail.maxEmails | quote }}
+          - name: REDASH_MAIL_ASCII_ATTACHMENTS
+            value: {{ .Values.mail.asciiAttachments | quote }}
           - name: REDASH_STATIC_ASSETS_PATH
             value: {{ .Values.redashStaticAssetsPath | quote }}
           - name: REDASH_COOKIE_SECRET
@@ -114,6 +122,14 @@ spec:
             value: {{ .Values.mail.password | quote }}
           - name: REDASH_MAIL_DEFAULT_SENDER
             value: {{ .Values.mail.defaultSender | quote }}
+          - name: REDASH_MAIL_USE_TLS
+            value: {{ .Values.mail.useTls | quote }}
+          - name: REDASH_MAIL_USE_SSL
+            value: {{ .Values.mail.useSSL | quote }}
+          - name: REDASH_MAIL_MAX_EMAILS
+            value: {{ .Values.mail.maxEmails | quote }}
+          - name: REDASH_MAIL_ASCII_ATTACHMENTS
+            value: {{ .Values.mail.asciiAttachments | quote }}
           - name: REDASH_STATIC_ASSETS_PATH
             value: {{ .Values.redashStaticAssetsPath | quote }}
           - name: REDASH_COOKIE_SECRET
@@ -196,6 +212,14 @@ spec:
             value: {{ .Values.mail.password | quote }}
           - name: REDASH_MAIL_DEFAULT_SENDER
             value: {{ .Values.mail.defaultSender | quote }}
+          - name: REDASH_MAIL_USE_TLS
+            value: {{ .Values.mail.useTls | quote }}
+          - name: REDASH_MAIL_USE_SSL
+            value: {{ .Values.mail.useSSL | quote }}
+          - name: REDASH_MAIL_MAX_EMAILS
+            value: {{ .Values.mail.maxEmails | quote }}
+          - name: REDASH_MAIL_ASCII_ATTACHMENTS
+            value: {{ .Values.mail.asciiAttachments | quote }}
           - name: REDASH_STATIC_ASSETS_PATH
             value: {{ .Values.redashStaticAssetsPath | quote }}
           - name: REDASH_COOKIE_SECRET
